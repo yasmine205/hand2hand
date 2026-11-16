@@ -2,6 +2,11 @@
 
 Plateforme web de dons (projet universitaire) qui met en relation des **donateurs**, des **associations** et un **administrateur**.
 
+## Auteurs
+Projet réalisé en binôme par :
+- **Yasmine Ben Mefteh** 
+- **Tasnim Baccouri** 
+
 ## Fonctionnalités
 - **Utilisateur (donateur)** : inscription, connexion, don d'objets avec photo, modification/suppression tant que le don est `pending`, publication d'offres d'emploi, suivi des statuts.
 - **Administrateur** : approuve ou refuse les dons et les offres.
