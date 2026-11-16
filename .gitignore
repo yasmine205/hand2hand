@@ -1,0 +1,14 @@
+# Identifiants de base de données locaux (copier db_config.example.php -> db_config.php)
+db_config.php
+
+# Photos envoyées par les utilisateurs pendant les tests
+uploads/*
+!uploads/.gitkeep
+!uploads/.htaccess
+
+# Fichiers système / éditeurs
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.log

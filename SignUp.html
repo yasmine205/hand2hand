@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hand2Hand | Create Account</title>
+    <style>
+        /* ===================== BASE & BACKGROUND ===================== */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { 
+            min-height: 100vh; display: flex; justify-content: center; align-items: center; 
+            color: white; background: #0a0f1c; padding: 40px 20px; position: relative; overflow-x: hidden;
+        }
+        body::before { 
+            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+            background-image: linear-gradient(rgba(10, 15, 28, 0.75), rgba(10, 15, 28, 0.75)), 
+            url('https://images.unsplash.com/photo-1511632765486-a01980e01a18?q=80&w=2070'); 
+            background-size: cover; background-position: center; filter: blur(3px); z-index: -1; 
+        }
+
+        /* ===================== GLASS CARD ===================== */
+        .signup-wrapper { 
+            width: 100%; max-width: 600px; padding: 40px; 
+            background: rgba(17, 25, 40, 0.7); backdrop-filter: blur(20px); 
+            border-radius: 32px; border: 1px solid rgba(255, 255, 255, 0.1); 
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        .signup-title { text-align: center; margin-bottom: 30px; }
+        .signup-title h2 { font-size: 2.2rem; font-weight: 800; }
+        .signup-title span { color: #10b981; }
+
+        /* ===================== TABS ===================== */
+        input[type="radio"] { display: none; }
+        .tabs { display: flex; justify-content: center; gap: 12px; margin-bottom: 30px; }
+        .tabs label { 
+            cursor: pointer; padding: 10px 24px; background: rgba(255, 255, 255, 0.03); 
+            border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; transition: 0.3s; 
+            font-weight: 600; font-size: 0.8rem; text-transform: uppercase; color: rgba(255, 255, 255, 0.5); 
+        }
+        #tab-user:checked ~ .tabs label[for="tab-user"], 
+        #tab-association:checked ~ .tabs label[for="tab-association"] { 
+            background: rgba(30, 41, 59, 0.9); border-color: rgba(255, 255, 255, 0.2); color: white; 
+        }
+
+        /* ===================== FORM ELEMENTS ===================== */
+        .form-container { display: flex; flex-direction: column; gap: 12px; }
+        .name-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        
+        input { 
+            background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.1); 
+            padding: 14px 20px; border-radius: 14px; color: white; width: 100%; transition: 0.2s; 
+        }
+        input:focus { border-color: rgba(16, 185, 129, 0.5); background: rgba(255, 255, 255, 0.08); outline: none; }
+
+        .association-only { display: none; flex-direction: column; gap: 12px; }
+        #tab-association:checked ~ form .association-only { display: flex; }
+
+        /* ===================== VALIDATION STYLES ===================== */
+        .error-msg { color: #ff4d4d; font-size: 11px; margin-top: 4px; display: block; min-height: 14px; font-weight: 600; }
+        input.invalid { border-color: #ff4d4d !important; background: rgba(255, 77, 77, 0.05); }
+
+        .btn-submit { 
+            margin-top: 10px; background: #10b981; border: none; padding: 16px; 
+            border-radius: 50px; font-weight: 700; text-transform: uppercase; 
+            cursor: pointer; transition: 0.3s; color: white; 
+        }
+        .btn-submit:hover { background: #059669; transform: translateY(-2px); }
+        .footer-text { text-align: center; margin-top: 25px; font-size: 0.85rem; color: rgba(255, 255, 255, 0.5); }
+        .footer-text a { color: white; text-decoration: none; font-weight: 700; }
+    </style>
+</head>
+<body>
+
+<div class="signup-wrapper">
+    <div class="signup-title">
+        <h2>Create Your <span>Account</span></h2>
+    </div>
+
+    <input type="radio" id="tab-user" name="role_toggle" checked onchange="updateRole('user')">
+    <input type="radio" id="tab-association" name="role_toggle" onchange="updateRole('association')">
+
+    <div class="tabs">
+        <label for="tab-user">User</label>
+        <label for="tab-association">Association</label>
+    </div>
+
+    <div id="flash" style="display:none;margin-bottom:16px;padding:12px 16px;border-radius:12px;font-size:13px;font-weight:600;background:rgba(255,77,77,0.1);border:1px solid rgba(255,77,77,0.3);color:#ff6b6b;"></div>
+
+    <form id="signupForm" action="process_signup.php" method="POST" class="form-container">
+        <input type="hidden" name="account_type" id="account_type" value="user">
+
+        <div class="name-row">
+            <div>
+                <input type="text" name="first_name" id="first_name" placeholder="First Name" required>
+                <span class="error-msg" id="err-first_name"></span>
+            </div>
+            <div>
+                <input type="text" name="last_name" id="last_name" placeholder="Last Name" required>
+                <span class="error-msg" id="err-last_name"></span>
+            </div>
+        </div>
+
+        <div>
+            <input type="email" name="email" id="email" placeholder="Email Address">
+            <span class="error-msg" id="err-email"></span>
+        </div>
+
+        <div>
+            <input type="password" name="password" id="password" placeholder="Password">
+            <span class="error-msg" id="err-password"></span>
+        </div>
+
+        <div class="name-row">
+            <div>
+                <input type="text" name="phone" id="phone" placeholder="Phone Number">
+                <span class="error-msg" id="err-phone"></span>
+            </div>
+            <div>
+                <input type="text" name="city" id="city" placeholder="City">
+                <span class="error-msg" id="err-city"></span>
+            </div>
+        </div>
+
+        <div>
+            <input type="text" name="address" id="address" placeholder="Full Address">
+            <span class="error-msg" id="err-address"></span>
+        </div>
+
+        <div class="association-only">
+            <div>
+                <input type="text" name="assoc_name" id="assoc_name" placeholder="Association Name">
+                <span class="error-msg" id="err-assoc_name"></span>
+            </div>
+            <div>
+                <input type="text" name="reg_number" id="reg_number" placeholder="Registration Number">
+                <span class="error-msg" id="err-reg_number"></span>
+            </div>
+        </div>
+
+        <button type="submit" class="btn-submit">Create Account</button>
+    </form>
+
+    <div class="footer-text">
+        Already have an account? <a href="login.html">Sign In</a>
+    </div>
+</div>
+
+<script>
+    // Messages renvoyés par process_signup.php
+    (function () {
+        const msgs = {
+            exists:   "Cet email est déjà utilisé.",
+            email:    "Adresse email invalide.",
+            password: "Mot de passe trop court (6 caractères minimum).",
+            phone:    "Le téléphone doit contenir exactement 8 chiffres.",
+            assoc:    "Nom et numéro d'enregistrement obligatoires pour une association.",
+            invalid:  "Veuillez remplir tous les champs obligatoires."
+        };
+        const err = new URLSearchParams(location.search).get('error');
+        if (err) {
+            const box = document.getElementById('flash');
+            box.textContent = msgs[err] || "Une erreur est survenue.";
+            box.style.display = 'block';
+        }
+    })();
+
+    function updateRole(role) {
+        document.getElementById('account_type').value = role;
+        const assocName = document.getElementById('assoc_name');
+        const regNum = document.getElementById('reg_number');
+
+        if (role === 'association') {
+            assocName.setAttribute('required', 'true');
+            regNum.setAttribute('required', 'true');
+        } else {
+            assocName.removeAttribute('required');
+            regNum.removeAttribute('required');
+        }
+    }
+
+    function showError(id, message) {
+        const input = document.getElementById(id);
+        const errorSpan = document.getElementById('err-' + id);
+        if(input) input.classList.add('invalid');
+        if(errorSpan) errorSpan.innerText = message;
+    }
+
+    document.getElementById('signupForm').addEventListener('submit', function(e) {
+        let isValid = true;
+
+        // Clear previous errors
+        document.querySelectorAll('.error-msg').forEach(el => el.innerText = "");
+        document.querySelectorAll('input').forEach(el => el.classList.remove('invalid'));
+
+        // 1. Name Validation (lettres, accents, espaces, tirets)
+        const nameRegex = /^[\p{L}\s'-]+$/u;
+        const fName = document.getElementById('first_name');
+        const lName = document.getElementById('last_name');
+
+        if (!nameRegex.test(fName.value)) {
+            showError('first_name', "Enter a valid name (letters only).");
+            isValid = false;
+        }
+        if (!nameRegex.test(lName.value)) {
+            showError('last_name', "Enter a valid name (letters only).");
+            isValid = false;
+        }
+
+        // 2. Email Validation
+        const email = document.getElementById('email');
+        if (!email.value.includes('@') || email.value.length < 5) {
+            showError('email', "Enter a valid email address.");
+            isValid = false;
+        }
+
+        // 3. Password Validation
+        const pass = document.getElementById('password');
+        if (pass.value.length < 6) {
+            showError('password', "Minimum 6 characters required.");
+            isValid = false;
+        }
+
+        // 4. Phone Validation (Tunisian style: 8 digits)
+        const phone = document.getElementById('phone');
+        const phoneRegex = /^[0-9]{8}$/;
+        if (!phoneRegex.test(phone.value)) {
+            showError('phone', "Must be exactly 8 numbers.");
+            isValid = false;
+        }
+
+        // 5. Association Logic
+        const role = document.getElementById('account_type').value;
+        if (role === 'association') {
+            const aName = document.getElementById('assoc_name');
+            const rNum = document.getElementById('reg_number');
+            if (aName.value.trim() === "") {
+                showError('assoc_name', "Required for associations.");
+                isValid = false;
+            }
+            if (rNum.value.trim() === "") {
+                showError('reg_number', "Required for associations.");
+                isValid = false;
+            }
+        }
+
+        if (!isValid) e.preventDefault();
+    });
+</script>
+
+</body>
+</html>
